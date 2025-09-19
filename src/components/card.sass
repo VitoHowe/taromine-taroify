@@ -1,0 +1,29 @@
+
+.goods-title
+  font-weight: bold; /* 字体加粗 */
+  font-size: 32rpx
+  font-family: "bold"
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* 最多显示2行 */
+  -webkit-box-orient: vertical;
+  overflow: hidden; /* 超出部分隐藏 */
+  text-overflow: ellipsis; /* 超出部分显示省略号（可选） */
+
+.goods-brief
+  font-size: 24rpx
+  color: gray
+
+
+.goods-price
+  font-size: 24rpx
+  font-family: "normal"
+  color: #f00
+  // display: inline-flex;
+  // align-items: baseline;
+
+.goods-price::before
+  content: "¥";
+  /* 可根据需要调整符号大小和间距 */
+  margin-right: 4rpx;
+  font-size: 24rpx; /* 符号稍小一点更美观 */
+

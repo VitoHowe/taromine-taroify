@@ -1,0 +1,75 @@
+* Taro TodoMVC (Taro + @antmjs/Vantui 或 NutUI 或 Taroify + Redux + Tailwindcss)
+:PROPERTIES:
+:CUSTOM_ID: Taro TodoMVC
+:END:
+
+基于 [[https://taro-docs.jd.com/][Taro]] 多端统一开发框架的 React Typescript 入门学习示例，模仿 [[https://todomvc.com/][TodoMVC]]， 支持微信小程序和 H5，其他平台未测试，
+
+我的小程序端开发入门学习项目，定有很多不足，希望大家多多批评指导，尤其希望有人能参与完善 ^_^
+
+[[file:cover.jpg]]
+
+** 技术栈
+:PROPERTIES:
+:CUSTOM_ID: 技术栈
+:END:
+- *框架*: Taro + React Typescript + Redux Toolkit
+- *组件库*: [[https://gitee.com/sd44/taromine/tree/taroify/][Taroify]]，[[https://gitee.com/sd44/taromine/tree/vantui/][@antmjs/Vantui]], [[https://gitee.com/sd44/taromine/tree/nutui/][NutUI]] 切换 UI 分支后勿忘 ~pnpm i~
+- *TailWindCSS*:  [[https://tw.icebreaker.top/][Weapp-TailwindCSS]]
+
+** 页面与功能
+:PROPERTIES:
+:CUSTOM_ID: 页面与功能
+:END:
+
+- ~Typescript~, ~React~ Functional Component
+
+- ~TailWindCSS~ 特别感谢 IceBreaker 大大开发的 ~weapp-tailwindcss~ ，避开了很多
+   小程序 + ~TailWindCSS~ 的坑，并热心帮助我完成本项目。
+
+- ~Redux~ 官方当前推荐使用 ~Redux Toolkit~ 编写 ~Redux~ 逻辑，本项目包含两个简单示例：
+
+  1. 极简 [[file:src/pages/counters.tsx][Counters]]
+
+  2. [[file:src/pages/todoMVC.tsx][TodosMVC]] 参考 [[https://todomvc.com/][todomvc.com]]
+
+** 安装与运行
+:PROPERTIES:
+:CUSTOM_ID: 安装与运行
+:END:
+确保你已经安装了 [[https://nodejs.org/][Node.js]], [[https://pnpm.io/][pnpm]] 和全局 Taro
+
+1. 克隆仓库:
+
+   #+begin_src sh
+   git clone <repository-url>
+   cd <project-name>
+   #+end_src
+
+2. 安装依赖:
+
+   #+begin_src sh
+   pnpm install
+   #+end_src
+
+3. 运行项目:
+
+   #+begin_src sh
+     pnpm dev:h5
+     pnpm dev:weapp
+   #+end_src
+
+TODO: 尚未测试微信小程序等！
+
+4. 构建项目:
+
+   #+begin_src sh
+   pnpm build:h5
+   pnpm build:weapp
+   #+end_src
+
+** 许可证
+:PROPERTIES:
+:CUSTOM_ID: 许可证
+:END:
+本项目采用 MIT 许可证。详情请查看 [[file:LICENSE]] 文件。
