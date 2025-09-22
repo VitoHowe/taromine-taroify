@@ -8,6 +8,7 @@ import prodConfig from './prod';
 // https://tw.icebreaker.top/docs/multi-platform
 const isH5 = process.env.TARO_ENV === 'h5';
 const isApp = process.env.TARO_ENV === 'rn';
+const isWeapp = process.env.TARO_ENV === 'weapp';
 const WeappTailwindcssDisabled = isH5 || isApp;
 
 // https://taro-docs.jd.com/docs/next/config#defineconfig-辅助函数
@@ -15,7 +16,7 @@ export default defineConfig<'webpack5'>(async (merge, { command, mode }) => {
   const baseConfig: UserConfigExport<'webpack5'> = {
     projectName: 'myApp',
     date: '2025-2-23',
-    plugins: ['@tarojs/plugin-html'],
+    plugins: ['@tarojs/plugin-html','@tarojs/plugin-http'],
     designWidth: 750,
 
     deviceRatio: {
@@ -41,9 +42,18 @@ export default defineConfig<'webpack5'>(async (merge, { command, mode }) => {
     },
     framework: 'react',
     // https://docs.taro.zone/blog/2022/05/19/Taro-3.5-beta#1-webpack5
-    compiler: { type: 'webpack5', prebundle: { enable: true } }, // 依赖预编译配置
+    compiler: {
+      type: 'webpack5',
+      prebundle: {
+        enable: true
+      }
+    },
     cache: {
-      enable: true, // Webpack 持久化缓存配置，建议开启。默认配置请参考：https://docs.taro.zone/docs/config-detail#cache
+      enable: true,
+      // Webpack 持久化缓存配置，建议开启
+      buildDependencies: {
+        config: [__filename]
+      }
     },
     mini: {
       postcss: {
@@ -61,6 +71,8 @@ export default defineConfig<'webpack5'>(async (merge, { command, mode }) => {
       },
       webpackChain(chain) {
         chain.resolve.plugin('tsconfig-paths').use(TsconfigPathsPlugin);
+
+        // 基础插件配置
         chain.merge({
           plugin: {
             install: {
@@ -74,11 +86,37 @@ export default defineConfig<'webpack5'>(async (merge, { command, mode }) => {
               ],
             },
           },
-          // 出现chunkLoadingGlobal is not defined，就注释切换如下代码。
-          output: {
-            chunkLoadingGlobal: 'webpackJsonp',
-          },
         });
+
+        // 只在微信小程序环境下设置 chunkLoadingGlobal
+        if (isWeapp) {
+          chain.output.set('chunkLoadingGlobal', 'webpackJsonp');
+          console.log('🔧 [Webpack] 微信小程序环境：已设置 chunkLoadingGlobal = webpackJsonp');
+        }
+
+        // 针对不同环境的优化配置
+        if (isWeapp) {
+          // 微信小程序环境的特殊配置
+          chain.optimization.splitChunks({
+            chunks: 'all',
+            cacheGroups: {
+              common: {
+                name: 'common',
+                minChunks: 2,
+                priority: 1,
+                enforce: true,
+                reuseExistingChunk: true,
+              },
+              vendors: {
+                name: 'vendors',
+                test: /[\\/]node_modules[\\/]/,
+                priority: 10,
+                enforce: true,
+                reuseExistingChunk: true,
+              },
+            },
+          });
+        }
       },
     },
     h5: {

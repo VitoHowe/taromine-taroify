@@ -4,11 +4,17 @@ import { HomeOutlined, BookmarkOutlined, GiftOutlined, UserOutlined } from '@tar
 import { useState } from 'react'
 import PageLayout from '~/components/PageLayout'
 import StudyCard from '~/components/StudyCard'
+import ApiExample from '~/components/ApiExample'
+import { useFetchBanners, useFetchRecommendedStudy } from '~/schema/home'
 
 function Index() {
   const [searchValue, setSearchValue] = useState('')
 
-  // 模拟数据
+  // 使用新的 API Hook 获取数据
+  const { data: banners, loading: bannersLoading } = useFetchBanners()
+  const { data: studyItems, loading: studyLoading } = useFetchRecommendedStudy(6)
+
+  // 模拟数据（作为后备）
   const bannerData = [
     {
       id: 1,
@@ -154,6 +160,11 @@ function Index() {
                 />
               ))}
             </View>
+          </View>
+
+          {/* API 使用示例 */}
+          <View className="bg-white rounded-xl shadow-sm mx-4 mb-4">
+            <ApiExample />
           </View>
 
           {/* 底部间距，避免被TabBar遮挡 */}

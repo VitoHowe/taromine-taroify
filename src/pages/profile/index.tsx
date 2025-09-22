@@ -8,11 +8,16 @@ import {
   ArrowRight
 } from '@taroify/icons'
 import PageLayout from '~/components/PageLayout'
+import { LoginButton } from '~/components/LoginModal'
+import { useAuth } from '~/hooks/useAuth'
 
 function Profile() {
-  const userInfo = {
-    nickname: '学习者',
-    avatar: '',
+  const { isLoggedIn, userInfo: authUserInfo, logout, getUserProfile, isLoading } = useAuth()
+
+  // 模拟用户数据（在实际项目中应该从 API 获取）
+  const userStats = {
+    nickname: authUserInfo?.userInfo?.nickName || '学习者',
+    avatar: authUserInfo?.userInfo?.avatarUrl || '',
     level: 5,
     points: 2580,
     studyDays: 45,
@@ -62,46 +67,79 @@ function Profile() {
         >
           {/* 用户信息卡片 */}
           <View className="bg-gradient-to-r from-blue-500 to-purple-600 px-4 pt-8 pb-6 text-white">
-            <View className="flex items-center mb-4">
-              <Avatar
-                size="large"
-                src={userInfo.avatar}
-                className="mr-4 bg-white text-blue-500"
-              >
-                <UserOutlined size={24} />
-              </Avatar>
-              <View className="flex-1">
-                <Text className="text-xl font-semibold text-white mb-1">
-                  {userInfo.nickname}
-                </Text>
-                <Text className="text-sm opacity-90 text-white">
-                  Lv.{userInfo.level} · {userInfo.points} 学习积分
-                </Text>
-              </View>
-              <Button
-                size="small"
-                variant="outlined"
-                className="border-white text-white"
-              >
-                编辑资料
-              </Button>
-            </View>
+            {isLoggedIn ? (
+              <>
+                <View className="flex items-center mb-4">
+                  <Avatar
+                    size="large"
+                    src={userStats.avatar}
+                    className="mr-4 bg-white text-blue-500"
+                  >
+                    <UserOutlined size={24} />
+                  </Avatar>
+                  <View className="flex-1">
+                    <Text className="text-xl font-semibold text-white mb-1">
+                      {userStats.nickname}
+                    </Text>
+                    <Text className="text-sm opacity-90 text-white">
+                      Lv.{userStats.level} · {userStats.points} 学习积分
+                    </Text>
+                    {authUserInfo?.openid && (
+                      <Text className="text-xs opacity-75 text-white mt-1">
+                        ID: {authUserInfo.openid.substring(0, 8)}...
+                      </Text>
+                    )}
+                  </View>
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    className="border-white text-white mr-2"
+                    onClick={getUserProfile}
+                  >
+                    {authUserInfo?.userInfo ? '已授权' : '获取头像'}
+                  </Button>
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    className="border-white text-white"
+                    onClick={logout}
+                  >
+                    退出
+                  </Button>
+                </View>
 
-            {/* 学习统计 */}
-            <View className="flex justify-between mt-6">
-              <View className="text-center">
-                <Text className="text-2xl font-bold text-white">{userInfo.studyDays}</Text>
-                <Text className="text-xs opacity-90 text-white">学习天数</Text>
+                {/* 学习统计 */}
+                <View className="flex justify-between mt-6">
+                  <View className="text-center">
+                    <Text className="text-2xl font-bold text-white">{userStats.studyDays}</Text>
+                    <Text className="text-xs opacity-90 text-white">学习天数</Text>
+                  </View>
+                  <View className="text-center">
+                    <Text className="text-2xl font-bold text-white">{userStats.completedCourses}</Text>
+                    <Text className="text-xs opacity-90 text-white">完成课程</Text>
+                  </View>
+                  <View className="text-center">
+                    <Text className="text-2xl font-bold text-white">{userStats.points}</Text>
+                    <Text className="text-xs opacity-90 text-white">学习积分</Text>
+                  </View>
+                </View>
+              </>
+            ) : (
+              <View className="text-center py-8">
+                <UserOutlined size={48} className="text-white opacity-60 mb-4" />
+                <Text className="text-xl font-semibold text-white mb-2">
+                  {isLoading ? '登录检查中...' : '您还未登录'}
+                </Text>
+                <Text className="text-sm opacity-90 text-white mb-6">
+                  登录后可查看学习记录和个人数据
+                </Text>
+                {!isLoading && (
+                  <LoginButton className="bg-white text-blue-600 border-none">
+                    立即登录
+                  </LoginButton>
+                )}
               </View>
-              <View className="text-center">
-                <Text className="text-2xl font-bold text-white">{userInfo.completedCourses}</Text>
-                <Text className="text-xs opacity-90 text-white">完成课程</Text>
-              </View>
-              <View className="text-center">
-                <Text className="text-2xl font-bold text-white">{userInfo.points}</Text>
-                <Text className="text-xs opacity-90 text-white">学习积分</Text>
-              </View>
-            </View>
+            )}
           </View>
 
           {/* 快捷功能 */}

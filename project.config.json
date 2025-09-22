@@ -4,7 +4,7 @@
   "description": "taro初体验",
   "appid": "wxd4ebde93a8cc9f00",
   "setting": {
-    "urlCheck": true,
+    "urlCheck": false,
     "es6": false,
     "enhance": false,
     "compileHotReLoad": true,
